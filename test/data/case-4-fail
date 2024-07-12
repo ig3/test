@@ -1,0 +1,19 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('fail', t => {
+  t.fail('fail causes failure');
+  t.end();
+});
+/*
+TAP version 13
+# fail
+not ok 1 fail causes failure
+not ok 2 fail
+
+1..2
+# tests 2
+# pass  0
+# fail  2
+*/
