@@ -1,0 +1,19 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('end called twice', t => {
+  t.end();
+  t.end();
+});
+/*
+TAP version 13
+# end called twice
+not ok 1 .end already called
+not ok 2 end called twice
+
+1..2
+# tests 2
+# pass  0
+# fail  2
+*/

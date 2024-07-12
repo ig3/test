@@ -64,7 +64,7 @@ function fail (desc) {
 function end () {
   if (done) {
     nFailed++;
-    console.log('not ok ' + ++nTests + ' .end already called.');
+    console.log('not ok ' + ++nTests + ' .end already called');
   } else {
     done = true;
   }
