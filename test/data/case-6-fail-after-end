@@ -1,0 +1,19 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('fail after end', t => {
+  t.end();
+  t.fail('fail after end');
+});
+/*
+TAP version 13
+# fail after end
+not ok 1 .end already called: fail after end
+not ok 2 fail after end
+
+1..2
+# tests 2
+# pass  0
+# fail  2
+*/
