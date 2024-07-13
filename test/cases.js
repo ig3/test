@@ -67,7 +67,7 @@ function runCase (caseName) {
         console.log('    Actual:');
         console.log(
           stdout.join('').split('\n').map(line => '    ' + line).join('\n'));
-        console.log('  ---');
+        console.log('  ...');
         nFail++;
       }
       resolve('resolved: ' + caseName);

@@ -2,9 +2,9 @@
 
 let done = false;
 let nTests = 0;
-let nPassed = 0;
-let nFailed = 0;
-const nSkipped = 0;
+let nPass = 0;
+let nFail = 0;
+let nSkip = 0;
 async function test (desc, cb, opts) {
   const stack = new Error('test').stack.split('\n').slice(2);
   console.log('TAP version 13');
@@ -12,58 +12,78 @@ async function test (desc, cb, opts) {
   await Promise.resolve()
   .then(() => { return cb(module.exports); });
   if (!done) {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + (++nTests) +
       ' test exited without ending: ' + desc);
     console.log('  ---');
     console.log('    operator: fail');
     console.log('    at: ' + stack[0].slice(7));
     console.log('  ...');
-  } else if (nFailed === 0) {
-    nPassed++;
+  } else if (nFail === 0) {
+    nPass++;
     console.log('ok ' + (++nTests) + ' ' + desc);
   } else {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + (++nTests) + ' ' + desc);
   }
 
   console.log();
   console.log('1..' + nTests);
   console.log('# tests ' + nTests);
-  if (nSkipped) {
-    console.log('# skip  ' + nSkipped);
+  console.log('# pass  ' + nPass);
+  if (nSkip) {
+    console.log('# skip  ' + nSkip);
   }
-  console.log('# pass  ' + nPassed);
-  if (nFailed === 0) {
+  if (nFail > 0) {
+    console.log('# fail  ' + nFail);
+  } else if (nPass > 0) {
     console.log('\n# ok');
-  } else {
-    console.log('# fail  ' + nFailed);
+  }
+}
+
+async function skip (desc, cb, opts) {
+  console.log('TAP version 13');
+  console.log('# ' + desc);
+  console.log('ok ' + (++nTests) + ' # skip ' + desc);
+  nSkip++;
+
+  console.log();
+  console.log('1..' + nTests);
+  console.log('# tests ' + nTests);
+  console.log('# pass  ' + nPass);
+  if (nSkip) {
+    console.log('# skip  ' + nSkip);
+  }
+  if (nFail > 0) {
+    console.log('# fail  ' + nFail);
+  } else if (nPass > 0) {
+    console.log('\n# ok');
   }
 }
 
 function pass (desc) {
   if (done) {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + ++nTests + ' .end already called: ' + desc);
   } else {
-    nPassed++;
+    nPass++;
     console.log('ok ' + ++nTests + ' ' + desc);
   }
 }
 
 function fail (desc) {
   if (done) {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + (++nTests) + ' .end already called: ' + desc);
   } else {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + (++nTests) + ' ' + desc);
   }
 }
 
 function end () {
   if (done) {
-    nFailed++;
+    nFail++;
     console.log('not ok ' + ++nTests + ' .end already called');
   } else {
     done = true;
@@ -72,6 +92,7 @@ function end () {
 
 module.exports = {
   test,
+  skip,
   pass,
   fail,
   end,

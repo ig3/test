@@ -1,0 +1,17 @@
+'use strict';
+
+const t = require('../..');
+
+t.skip('skipped test', t => {
+  t.end();
+});
+/*
+TAP version 13
+# skipped test
+ok 1 # skip skipped test
+
+1..1
+# tests 1
+# pass  0
+# skip  1
+*/
