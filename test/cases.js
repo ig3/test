@@ -23,6 +23,7 @@ let nFail = 0;
     console.log('\n# ok');
   } else {
     console.log('# fail  ' + nFail);
+    process.exitCode = 1;
   }
 })();
 
@@ -34,6 +35,8 @@ function runCase (caseName) {
       { encoding: 'utf8' }
     );
     const expectedOutput = data.slice(data.indexOf('/*') + 3, data.indexOf('*/'));
+    const expectedExitCode =
+      expectedOutput.indexOf('\n# fail') === -1 ? 0 : 1;
 
     const child = spawn('node', [path.join(__dirname, '/data/' + caseName)]);
 
@@ -48,18 +51,28 @@ function runCase (caseName) {
     });
 
     child.on('close', code => {
-      if (code === 0) {
-        console.log('ok ' + (++nTests) + ' exit code 0');
-        nPass++;
+      if (expectedExitCode === 0) {
+        if (code === 0) {
+          console.log('ok ' + (++nTests) + ' exit code 0');
+          nPass++;
+        } else {
+          console.log('not ok ' + (++nTests) + ' exit code 0');
+          nFail++;
+        }
       } else {
-        console.log('not ok ' + (++nTests) + ' exit code 0');
-        nFail++;
+        if (code === 0) {
+          console.log('not ok ' + (++nTests) + ' exit code 1');
+          nFail++;
+        } else {
+          console.log('ok ' + (++nTests) + ' exit code 1');
+          nPass++;
+        }
       }
       if (stdout.join('') === expectedOutput) {
-        console.log('OK ' + (++nTests) + ' correct output');
+        console.log('ok ' + (++nTests) + ' correct output');
         nPass++;
       } else {
-        console.log('not OK ' + (++nTests) + ' correct output');
+        console.log('not ok ' + (++nTests) + ' correct output');
         console.log('  ---');
         console.log('    Expected:');
         console.log(

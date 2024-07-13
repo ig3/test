@@ -25,6 +25,7 @@ process.on('exit', code => {
     }
     if (nFail > 0) {
       console.log('# fail  ' + nFail);
+      process.exitCode = 1;
     } else if (nPass > 0) {
       console.log('\n# ok');
     }
