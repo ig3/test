@@ -5,12 +5,38 @@ let nTests = 0;
 let nPass = 0;
 let nFail = 0;
 let nSkip = 0;
-async function test (desc, cb, opts) {
+let firstTest = true;
+
+function header () {
+  if (firstTest) {
+    console.log('TAP version 13');
+    firstTest = false;
+  }
+}
+
+process.on('exit', code => {
+  if (nTests) {
+    console.log();
+    console.log('1..' + nTests);
+    console.log('# tests ' + nTests);
+    console.log('# pass  ' + nPass);
+    if (nSkip) {
+      console.log('# skip  ' + nSkip);
+    }
+    if (nFail > 0) {
+      console.log('# fail  ' + nFail);
+    } else if (nPass > 0) {
+      console.log('\n# ok');
+    }
+  }
+});
+
+function test (desc, cb, opts) {
+  done = false;
+  header();
   const stack = new Error('test').stack.split('\n').slice(2);
-  console.log('TAP version 13');
   console.log('# ' + desc);
-  await Promise.resolve()
-  .then(() => { return cb(module.exports); });
+  cb(module.exports);
   if (!done) {
     nFail++;
     console.log('not ok ' + (++nTests) +
@@ -26,39 +52,13 @@ async function test (desc, cb, opts) {
     nFail++;
     console.log('not ok ' + (++nTests) + ' ' + desc);
   }
-
-  console.log();
-  console.log('1..' + nTests);
-  console.log('# tests ' + nTests);
-  console.log('# pass  ' + nPass);
-  if (nSkip) {
-    console.log('# skip  ' + nSkip);
-  }
-  if (nFail > 0) {
-    console.log('# fail  ' + nFail);
-  } else if (nPass > 0) {
-    console.log('\n# ok');
-  }
 }
 
 async function skip (desc, cb, opts) {
-  console.log('TAP version 13');
+  header();
   console.log('# ' + desc);
   console.log('ok ' + (++nTests) + ' # skip ' + desc);
   nSkip++;
-
-  console.log();
-  console.log('1..' + nTests);
-  console.log('# tests ' + nTests);
-  console.log('# pass  ' + nPass);
-  if (nSkip) {
-    console.log('# skip  ' + nSkip);
-  }
-  if (nFail > 0) {
-    console.log('# fail  ' + nFail);
-  } else if (nPass > 0) {
-    console.log('\n# ok');
-  }
 }
 
 function pass (desc) {

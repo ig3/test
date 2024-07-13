@@ -1,0 +1,24 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('test one', t => {
+  t.end();
+});
+
+t.test('test two', t => {
+  t.end();
+});
+/*
+TAP version 13
+# test one
+ok 1 test one
+# test two
+ok 2 test two
+
+1..2
+# tests 2
+# pass  2
+
+# ok
+*/
