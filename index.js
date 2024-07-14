@@ -102,10 +102,10 @@ function end () {
     this.done = true;
     if (this.nFail === 0) {
       rootContext.nPass++;
-      console.log('ok ' + (++rootContext.nTest) + ' ' + this.desc);
+      console.log('ok ' + (++rootContext.nTest) + ' test: ' + this.desc);
     } else {
       rootContext.nFail++;
-      console.log('not ok ' + (++rootContext.nTest) + ' ' + this.desc);
+      console.log('not ok ' + (++rootContext.nTest) + ' test: ' + this.desc);
     }
     this.resolve();
   }

@@ -10,7 +10,7 @@ t.test('fail', t => {
 TAP version 13
 # fail
 not ok 1 fail causes failure
-not ok 2 fail
+not ok 2 test: fail
 
 1..2
 # tests 2

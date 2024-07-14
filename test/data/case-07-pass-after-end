@@ -9,7 +9,7 @@ t.test('pass after end', t => {
 /*
 TAP version 13
 # pass after end
-ok 1 pass after end
+ok 1 test: pass after end
 not ok 2 .end already called: pass after end
 
 1..2

@@ -12,7 +12,7 @@ t.skip('test two', t => {
 /*
 TAP version 13
 # test one
-ok 1 test one
+ok 1 test: test one
 # test two
 ok 2 test: test two # SKIP
 
