@@ -1,7 +1,6 @@
 'use strict';
 
 const rootContext = createTestContext();
-let nFail = 0;
 let nSkip = 0;
 let firstTest = true;
 
@@ -16,7 +15,7 @@ process.on('exit', code => {
   rootContext.subtests
   .forEach(subtest => {
     if (!subtest.done) {
-      nFail++;
+      rootContext.nFail++;
       console.log('not ok ' + (++rootContext.nTest) + ' test exited without ending: ' + subtest.desc);
       console.log('  ---');
       console.log('    operator: fail');
@@ -32,8 +31,8 @@ process.on('exit', code => {
     if (nSkip) {
       console.log('# skip  ' + nSkip);
     }
-    if (nFail > 0) {
-      console.log('# fail  ' + nFail);
+    if (rootContext.nFail > 0) {
+      console.log('# fail  ' + rootContext.nFail);
       process.exitCode = 1;
     } else if (rootContext.nPass > 0) {
       console.log('\n# ok');
@@ -73,7 +72,7 @@ function skip (desc, cb, opts) {
 
 function pass (desc) {
   if (this.done) {
-    nFail++;
+    rootContext.nFail++;
     this.nFail++;
     console.log('not ok ' + ++rootContext.nTest + ' .end already called: ' + desc);
   } else {
@@ -85,11 +84,11 @@ function pass (desc) {
 
 function fail (desc) {
   if (this.done) {
-    nFail++;
+    rootContext.nFail++;
     this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
   } else {
-    nFail++;
+    rootContext.nFail++;
     this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' ' + desc);
   }
@@ -97,7 +96,7 @@ function fail (desc) {
 
 function end () {
   if (this.done) {
-    nFail++;
+    rootContext.nFail++;
     this.nFail++;
     console.log('not ok ' + ++rootContext.nTest + ' .end already called');
   } else {
@@ -106,7 +105,7 @@ function end () {
       rootContext.nPass++;
       console.log('ok ' + (++rootContext.nTest) + ' ' + this.desc);
     } else {
-      nFail++;
+      rootContext.nFail++;
       console.log('not ok ' + (++rootContext.nTest) + ' ' + this.desc);
     }
     this.resolve();
