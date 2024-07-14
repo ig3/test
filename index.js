@@ -73,11 +73,11 @@ function pass (desc) {
   if (this.done) {
     rootContext.nFail++;
     this.nFail++;
-    console.log('not ok ' + ++rootContext.nTest + ' .end already called: ' + desc);
+    console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
   } else {
     rootContext.nPass++;
     this.nPass++;
-    console.log('ok ' + ++rootContext.nTest + ' ' + desc);
+    console.log('ok ' + (++rootContext.nTest) + ' ' + desc);
   }
 }
 
@@ -97,7 +97,7 @@ function end () {
   if (this.done) {
     rootContext.nFail++;
     this.nFail++;
-    console.log('not ok ' + ++rootContext.nTest + ' .end already called');
+    console.log('not ok ' + (++rootContext.nTest) + ' .end already called');
   } else {
     this.done = true;
     if (this.nFail === 0) {
