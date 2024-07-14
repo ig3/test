@@ -8,7 +8,7 @@ t.skip('skipped test', t => {
 /*
 TAP version 13
 # skipped test
-ok 1 # skip skipped test
+ok 1 test: skipped test # SKIP
 
 1..1
 # tests 1

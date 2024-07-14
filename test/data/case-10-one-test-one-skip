@@ -14,7 +14,7 @@ TAP version 13
 # test one
 ok 1 test one
 # test two
-ok 2 # skip test two
+ok 2 test: test two # SKIP
 
 1..2
 # tests 2

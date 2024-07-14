@@ -68,7 +68,7 @@ function skip (desc, cb, opts) {
     (self.promise || Promise.resolve())
     .then(() => {
       console.log('# ' + desc);
-      console.log('ok ' + (++nTest) + ' # skip ' + desc);
+      console.log('ok ' + (++nTest) + ' test: ' + desc + ' # SKIP');
       nSkip++;
       this.nSkip++;
     });
