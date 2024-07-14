@@ -72,11 +72,11 @@ function skip (desc, cb, opts) {
 function pass (desc) {
   if (this.done) {
     rootContext.nFail++;
-    this.nFail++;
+    if (this !== rootContext) this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
   } else {
     rootContext.nPass++;
-    this.nPass++;
+    if (this !== rootContext) this.nPass++;
     console.log('ok ' + (++rootContext.nTest) + ' ' + desc);
   }
 }
@@ -84,11 +84,11 @@ function pass (desc) {
 function fail (desc) {
   if (this.done) {
     rootContext.nFail++;
-    this.nFail++;
+    if (this !== rootContext) this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
   } else {
     rootContext.nFail++;
-    this.nFail++;
+    if (this !== rootContext) this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' ' + desc);
   }
 }
@@ -96,7 +96,7 @@ function fail (desc) {
 function end () {
   if (this.done) {
     rootContext.nFail++;
-    this.nFail++;
+    if (this !== rootContext) this.nFail++;
     console.log('not ok ' + (++rootContext.nTest) + ' .end already called');
   } else {
     this.done = true;
