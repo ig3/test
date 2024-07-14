@@ -1,7 +1,6 @@
 'use strict';
 
 const rootContext = createTestContext();
-let nPass = 0;
 let nFail = 0;
 let nSkip = 0;
 let firstTest = true;
@@ -29,14 +28,14 @@ process.on('exit', code => {
     console.log();
     console.log('1..' + rootContext.nTest);
     console.log('# tests ' + rootContext.nTest);
-    console.log('# pass  ' + nPass);
+    console.log('# pass  ' + rootContext.nPass);
     if (nSkip) {
       console.log('# skip  ' + nSkip);
     }
     if (nFail > 0) {
       console.log('# fail  ' + nFail);
       process.exitCode = 1;
-    } else if (nPass > 0) {
+    } else if (rootContext.nPass > 0) {
       console.log('\n# ok');
     }
   }
@@ -78,7 +77,7 @@ function pass (desc) {
     this.nFail++;
     console.log('not ok ' + ++rootContext.nTest + ' .end already called: ' + desc);
   } else {
-    nPass++;
+    rootContext.nPass++;
     this.nPass++;
     console.log('ok ' + ++rootContext.nTest + ' ' + desc);
   }
@@ -104,7 +103,7 @@ function end () {
   } else {
     this.done = true;
     if (this.nFail === 0) {
-      nPass++;
+      rootContext.nPass++;
       console.log('ok ' + (++rootContext.nTest) + ' ' + this.desc);
     } else {
       nFail++;
