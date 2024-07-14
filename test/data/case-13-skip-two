@@ -1,0 +1,24 @@
+'use strict';
+
+const t = require('../..');
+
+t.skip('skip one', t => {
+  t.pass('skip one pass');
+  t.end();
+});
+t.skip('skip two', t => {
+  t.pass('skip two pass');
+  t.end();
+});
+/*
+TAP version 13
+# skip one
+ok 1 # skip skip one
+# skip two
+ok 2 # skip skip two
+
+1..2
+# tests 2
+# pass  0
+# skip  2
+*/

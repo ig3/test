@@ -61,10 +61,9 @@ function test (desc, cb, opts) {
   });
 }
 
-async function skip (desc, cb, opts) {
+function skip (desc, cb, opts) {
   const self = this;
   header();
-  if (!self.promise) self.promise = Promise.resolve();
   self.promise =
     (self.promise || Promise.resolve())
     .then(() => {
