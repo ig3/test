@@ -1,7 +1,6 @@
 'use strict';
 
 const rootContext = createTestContext();
-let nTest = 0;
 let nPass = 0;
 let nFail = 0;
 let nSkip = 0;
@@ -19,17 +18,17 @@ process.on('exit', code => {
   .forEach(subtest => {
     if (!subtest.done) {
       nFail++;
-      console.log('not ok ' + (++nTest) + ' test exited without ending: ' + subtest.desc);
+      console.log('not ok ' + (++rootContext.nTest) + ' test exited without ending: ' + subtest.desc);
       console.log('  ---');
       console.log('    operator: fail');
       console.log('    at: ' + subtest.stack[0].slice(7));
       console.log('  ...');
     }
   });
-  if (nTest) {
+  if (rootContext.nTest) {
     console.log();
-    console.log('1..' + nTest);
-    console.log('# tests ' + nTest);
+    console.log('1..' + rootContext.nTest);
+    console.log('# tests ' + rootContext.nTest);
     console.log('# pass  ' + nPass);
     if (nSkip) {
       console.log('# skip  ' + nSkip);
@@ -46,7 +45,6 @@ process.on('exit', code => {
 function test (desc, cb, opts) {
   const self = this;
   header();
-  self.nTest++;
   const subContext = createTestContext(self, desc);
   subContext.stack = new Error('test').stack.split('\n').slice(2);
   self.subtests.push(subContext);
@@ -68,7 +66,7 @@ function skip (desc, cb, opts) {
     (self.promise || Promise.resolve())
     .then(() => {
       console.log('# ' + desc);
-      console.log('ok ' + (++nTest) + ' test: ' + desc + ' # SKIP');
+      console.log('ok ' + (++rootContext.nTest) + ' test: ' + desc + ' # SKIP');
       nSkip++;
       this.nSkip++;
     });
@@ -78,11 +76,11 @@ function pass (desc) {
   if (this.done) {
     nFail++;
     this.nFail++;
-    console.log('not ok ' + ++nTest + ' .end already called: ' + desc);
+    console.log('not ok ' + ++rootContext.nTest + ' .end already called: ' + desc);
   } else {
     nPass++;
     this.nPass++;
-    console.log('ok ' + ++nTest + ' ' + desc);
+    console.log('ok ' + ++rootContext.nTest + ' ' + desc);
   }
 }
 
@@ -90,11 +88,11 @@ function fail (desc) {
   if (this.done) {
     nFail++;
     this.nFail++;
-    console.log('not ok ' + (++nTest) + ' .end already called: ' + desc);
+    console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
   } else {
     nFail++;
     this.nFail++;
-    console.log('not ok ' + (++nTest) + ' ' + desc);
+    console.log('not ok ' + (++rootContext.nTest) + ' ' + desc);
   }
 }
 
@@ -102,15 +100,15 @@ function end () {
   if (this.done) {
     nFail++;
     this.nFail++;
-    console.log('not ok ' + ++nTest + ' .end already called');
+    console.log('not ok ' + ++rootContext.nTest + ' .end already called');
   } else {
     this.done = true;
     if (this.nFail === 0) {
       nPass++;
-      console.log('ok ' + (++nTest) + ' ' + this.desc);
+      console.log('ok ' + (++rootContext.nTest) + ' ' + this.desc);
     } else {
       nFail++;
-      console.log('not ok ' + (++nTest) + ' ' + this.desc);
+      console.log('not ok ' + (++rootContext.nTest) + ' ' + this.desc);
     }
     this.resolve();
   }
