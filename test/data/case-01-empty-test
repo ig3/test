@@ -10,7 +10,7 @@ TAP version 13
 not ok 1 test exited without ending: empty test
   ---
     operator: fail
-    at: Object.<anonymous> (/home/ian/dev/@ig3/test/test/data/case-1-empty-test:5:3)
+    at: Object.<anonymous> (<dirname>/data/case-01-empty-test:5:3)
   ...
 
 1..1

@@ -34,7 +34,9 @@ function runCase (caseName) {
       'test/data/' + caseName,
       { encoding: 'utf8' }
     );
-    const expectedOutput = data.slice(data.indexOf('/*') + 3, data.indexOf('*/'));
+    const expectedOutput =
+      data.slice(data.indexOf('/*') + 3, data.indexOf('*/'))
+      .replace('<dirname>', __dirname);
     const expectedExitCode =
       expectedOutput.indexOf('\n# fail') === -1 ? 0 : 1;
 
