@@ -1,7 +1,6 @@
 'use strict';
 
 const rootContext = createTestContext();
-let nSkip = 0;
 let firstTest = true;
 
 function header () {
@@ -28,8 +27,8 @@ process.on('exit', code => {
     console.log('1..' + rootContext.nTest);
     console.log('# tests ' + rootContext.nTest);
     console.log('# pass  ' + rootContext.nPass);
-    if (nSkip) {
-      console.log('# skip  ' + nSkip);
+    if (rootContext.nSkip) {
+      console.log('# skip  ' + rootContext.nSkip);
     }
     if (rootContext.nFail > 0) {
       console.log('# fail  ' + rootContext.nFail);
@@ -65,8 +64,8 @@ function skip (desc, cb, opts) {
     .then(() => {
       console.log('# ' + desc);
       console.log('ok ' + (++rootContext.nTest) + ' test: ' + desc + ' # SKIP');
-      nSkip++;
-      this.nSkip++;
+      rootContext.nSkip++;
+      if (this !== rootContext) this.nSkip++;
     });
 }
 
