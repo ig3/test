@@ -9,11 +9,11 @@ t.test('end called twice', t => {
 /*
 TAP version 13
 # end called twice
-not ok 1 .end already called
-not ok 2 end called twice
+ok 1 end called twice
+not ok 2 .end already called
 
 1..2
 # tests 2
-# pass  0
-# fail  2
+# pass  1
+# fail  1
 */

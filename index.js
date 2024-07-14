@@ -1,7 +1,7 @@
 'use strict';
 
-let done = false;
-let nTests = 0;
+const rootContext = createTestContext();
+let nTest = 0;
 let nPass = 0;
 let nFail = 0;
 let nSkip = 0;
@@ -15,10 +15,21 @@ function header () {
 }
 
 process.on('exit', code => {
-  if (nTests) {
+  rootContext.subtests
+  .forEach(subtest => {
+    if (!subtest.done) {
+      nFail++;
+      console.log('not ok ' + (++nTest) + ' test exited without ending: ' + subtest.desc);
+      console.log('  ---');
+      console.log('    operator: fail');
+      console.log('    at: ' + subtest.stack[0].slice(7));
+      console.log('  ...');
+    }
+  });
+  if (nTest) {
     console.log();
-    console.log('1..' + nTests);
-    console.log('# tests ' + nTests);
+    console.log('1..' + nTest);
+    console.log('# tests ' + nTest);
     console.log('# pass  ' + nPass);
     if (nSkip) {
       console.log('# skip  ' + nSkip);
@@ -33,68 +44,95 @@ process.on('exit', code => {
 });
 
 function test (desc, cb, opts) {
-  done = false;
+  const self = this;
   header();
-  const stack = new Error('test').stack.split('\n').slice(2);
-  console.log('# ' + desc);
-  cb(module.exports);
-  if (!done) {
-    nFail++;
-    console.log('not ok ' + (++nTests) +
-      ' test exited without ending: ' + desc);
-    console.log('  ---');
-    console.log('    operator: fail');
-    console.log('    at: ' + stack[0].slice(7));
-    console.log('  ...');
-  } else if (nFail === 0) {
-    nPass++;
-    console.log('ok ' + (++nTests) + ' ' + desc);
-  } else {
-    nFail++;
-    console.log('not ok ' + (++nTests) + ' ' + desc);
-  }
+  self.nTest++;
+  const subContext = createTestContext(self, desc);
+  subContext.stack = new Error('test').stack.split('\n').slice(2);
+  self.subtests.push(subContext);
+  self.promise = (self.promise || Promise.resolve())
+  .then(() => {
+    console.log('# ' + desc);
+    return new Promise((resolve, reject) => {
+      subContext.resolve = resolve;
+      subContext.reject = reject;
+      return cb(subContext);
+    });
+  });
 }
 
 async function skip (desc, cb, opts) {
+  const self = this;
   header();
-  console.log('# ' + desc);
-  console.log('ok ' + (++nTests) + ' # skip ' + desc);
-  nSkip++;
+  if (!self.promise) self.promise = Promise.resolve();
+  self.promise =
+    (self.promise || Promise.resolve())
+    .then(() => {
+      console.log('# ' + desc);
+      console.log('ok ' + (++nTest) + ' # skip ' + desc);
+      nSkip++;
+      this.nSkip++;
+    });
 }
 
 function pass (desc) {
-  if (done) {
+  if (this.done) {
     nFail++;
-    console.log('not ok ' + ++nTests + ' .end already called: ' + desc);
+    this.nFail++;
+    console.log('not ok ' + ++nTest + ' .end already called: ' + desc);
   } else {
     nPass++;
-    console.log('ok ' + ++nTests + ' ' + desc);
+    this.nPass++;
+    console.log('ok ' + ++nTest + ' ' + desc);
   }
 }
 
 function fail (desc) {
-  if (done) {
+  if (this.done) {
     nFail++;
-    console.log('not ok ' + (++nTests) + ' .end already called: ' + desc);
+    this.nFail++;
+    console.log('not ok ' + (++nTest) + ' .end already called: ' + desc);
   } else {
     nFail++;
-    console.log('not ok ' + (++nTests) + ' ' + desc);
+    this.nFail++;
+    console.log('not ok ' + (++nTest) + ' ' + desc);
   }
 }
 
 function end () {
-  if (done) {
+  if (this.done) {
     nFail++;
-    console.log('not ok ' + ++nTests + ' .end already called');
+    this.nFail++;
+    console.log('not ok ' + ++nTest + ' .end already called');
   } else {
-    done = true;
+    this.done = true;
+    if (this.nFail === 0) {
+      nPass++;
+      console.log('ok ' + (++nTest) + ' ' + this.desc);
+    } else {
+      nFail++;
+      console.log('not ok ' + (++nTest) + ' ' + this.desc);
+    }
+    this.resolve();
   }
 }
 
-module.exports = {
-  test,
-  skip,
-  pass,
-  fail,
-  end,
-};
+function createTestContext (parent, desc) {
+  return {
+    parent: parent,
+    desc: (desc || 'root'),
+    test: test,
+    skip: skip,
+    pass: pass,
+    fail: fail,
+    end: end,
+    done: false,
+    subtests: [],
+    nTest: 0,
+    nPass: 0,
+    nFail: 0,
+    nSkip: 0,
+  };
+}
+
+module.exports = rootContext;
