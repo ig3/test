@@ -118,6 +118,10 @@ function skip (desc, cb, opts) {
   });
 }
 
+function plan (n) {
+  this.plan = n;
+}
+
 function pass (desc) {
   this.results.push({
     type: 'assert',
@@ -150,6 +154,7 @@ function createTestContext (parent, desc) {
     desc: (desc || 'root'),
     test: test,
     skip: skip,
+    plan: plan,
     pass: pass,
     fail: fail,
     end: end,
