@@ -9,24 +9,38 @@ process.on('exit', code => {
     rootContext.results.length > 0
   ) {
     console.log('TAP version 13');
-  }
-  rootContext.results
-  .forEach(result => {
-    reportResult(rootContext, rootContext, result);
-  });
-  if (rootContext.nTest) {
-    console.log();
-    console.log('1..' + rootContext.nTest);
-    console.log('# tests ' + rootContext.nTest);
-    console.log('# pass  ' + rootContext.nPass);
-    if (rootContext.nSkip) {
-      console.log('# skip  ' + rootContext.nSkip);
-    }
-    if (rootContext.nFail > 0) {
-      console.log('# fail  ' + rootContext.nFail);
+    rootContext.results
+    .forEach(result => {
+      reportResult(rootContext, rootContext, result);
+    });
+    if (
+      rootContext.nPlan &&
+      rootContext.nPlan !== rootContext.nTest
+    ) {
+      rootContext.nFail++;
       process.exitCode = 1;
-    } else if (rootContext.nPass > 0) {
-      console.log('\n# ok');
+      const actual = rootContext.nTest;
+      console.log(
+        'not ok ' +
+        (++rootContext.nTest) +
+        ' plan ' + rootContext.nPlan +
+        ' != actual ' + actual
+      );
+    }
+    if (rootContext.nTest) {
+      console.log();
+      console.log('1..' + rootContext.nTest);
+      console.log('# tests ' + rootContext.nTest);
+      console.log('# pass  ' + rootContext.nPass);
+      if (rootContext.nSkip) {
+        console.log('# skip  ' + rootContext.nSkip);
+      }
+      if (rootContext.nFail > 0) {
+        console.log('# fail  ' + rootContext.nFail);
+        process.exitCode = 1;
+      } else if (rootContext.nPass > 0) {
+        console.log('\n# ok');
+      }
     }
   }
 });
@@ -34,6 +48,9 @@ process.on('exit', code => {
 function reportResult (rootContext, resultContext, result) {
   if (result.type === 'test') {
     console.log('# ' + result.desc);
+    if (result.context.nPlan) {
+      console.log('1..' + result.context.nPlan);
+    }
     result.context.results
     .forEach(subResult => {
       if (result.done) {
@@ -52,6 +69,20 @@ function reportResult (rootContext, resultContext, result) {
       }
     });
 
+    if (
+      result.context.nPlan &&
+      result.context.results.length !== result.context.nPlan
+    ) {
+      rootContext.nFail++;
+      result.context.nFail++;
+      console.log(
+        'not ok ' +
+        (++rootContext.nTest) +
+        ' plan ' + result.context.nPlan +
+        ' actual ' + result.context.nTest
+      );
+    }
+
     if (!result.done) {
       rootContext.nFail++;
       result.context.nFail++;
@@ -65,32 +96,54 @@ function reportResult (rootContext, resultContext, result) {
     if (result.context.nFail === 0) {
       rootContext.nPass++;
       console.log('ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
+      if (resultContext !== rootContext) {
+        resultContext.nTest++;
+        resultContext.nPass++;
+      }
     } else {
       rootContext.nFail++;
       console.log('not ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
+      if (resultContext !== rootContext) {
+        resultContext.nTest++;
+        resultContext.nFail++;
+      }
     }
   } else if (result.type === 'skip') {
     console.log('# ' + result.desc);
     rootContext.nSkip++;
-    if (resultContext !== rootContext) resultContext.nSkip++;
     console.log(
       'ok ' +
       (++rootContext.nTest) +
       ' test: ' + result.desc + ' # SKIP'
     );
+    if (resultContext !== rootContext) {
+      resultContext.nTest++;
+      resultContext.nSkip++;
+    }
   } else if (result.type === 'assert') {
     if (result.pass) {
       rootContext.nPass++;
-      if (resultContext !== rootContext) resultContext.nPass++;
+      console.log(
+        'ok ' +
+        (++rootContext.nTest) + ' ' +
+        result.desc
+      );
+      if (resultContext !== rootContext) {
+        resultContext.nTest++;
+        resultContext.nPass++;
+      }
     } else {
       rootContext.nFail++;
-      if (resultContext !== rootContext) resultContext.nFail++;
+      console.log(
+        'not ok ' +
+        (++rootContext.nTest) + ' ' +
+        result.desc
+      );
+      if (resultContext !== rootContext) {
+        resultContext.nTest++;
+        resultContext.nFail++;
+      }
     }
-    console.log(
-      (result.pass ? 'ok ' : 'not ok ') +
-      (++rootContext.nTest) + ' ' +
-      result.desc
-    );
   }
 }
 
@@ -119,7 +172,7 @@ function skip (desc, cb, opts) {
 }
 
 function plan (n) {
-  this.plan = n;
+  this.nPlan = n;
 }
 
 function pass (desc) {
