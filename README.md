@@ -306,6 +306,18 @@ expected: the expected value
 desc: a description of the test condition
 
 
+### deepEqual(actual, expected, desc)
+
+An assertion that compares two values using  and passes or fails
+according to the result.
+
+actual: the actual value to be tested
+
+expected: the expected value
+
+desc: a description of the test condition
+
+
 ### end()
 
 This method indicates the end of the test. It must be called exactly once

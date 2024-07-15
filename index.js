@@ -1,6 +1,7 @@
 'use strict';
 
 const rootContext = createTestContext();
+const assert = require('node:assert/strict');
 
 // It aint over 'till it's over
 process.on('exit', code => {
@@ -139,10 +140,10 @@ function reportResult (rootContext, resultContext, result) {
       console.log('  ---');
       console.log('  operator: ' + result.name);
       if (Object.hasOwn(result, 'expected')) {
-        console.log('  expected: ' + result.expected);
+        console.log('  expected:', result.expected);
       }
       if (Object.hasOwn(result, 'actual')) {
-        console.log('  actual:   ' + result.actual);
+        console.log('  actual:  ', result.actual);
       }
       if (typeof result.stack !== 'undefined') {
         console.log('  at: ' + result.stack[0].slice(7));
@@ -238,6 +239,27 @@ function equal (actual, expected, desc) {
   });
 }
 
+function deepEqual (actual, expected, desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
+  const result = {
+    type: 'assert',
+    name: 'deepEqual',
+    pass: true,
+    actual: actual,
+    expected: expected,
+    desc: desc,
+    stack: stack,
+  };
+  try {
+    assert.deepEqual(actual, expected, desc);
+  } catch (err) {
+    result.pass = false;
+    result.actual = err.actual;
+    result.expected = err.expected;
+  }
+  this.results.push(result);
+}
+
 function createTestContext (parent, desc) {
   return {
     level: (parent ? (parent.level + 1) : 0),
@@ -250,6 +272,7 @@ function createTestContext (parent, desc) {
     fail: fail,
     ok: ok,
     equal: equal,
+    deepEqual: deepEqual,
     end: end,
     done: false,
     subtests: [],

@@ -1,0 +1,77 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('test', t => {
+  t.deepEqual(1, 1, '1 and 1');
+  t.deepEqual([1, 2, 3], [1, 2, 3], 'simple arrays');
+  t.deepEqual([1, 2, ['a', 'b']], [1, 2, ['a', 'b']], 'nested arrays');
+  t.deepEqual(
+    {
+     a: 1,
+     b: 2,
+     c: [1, 2],
+     d: {
+       x: 10,
+       y: 20,
+       z: 30,
+     }
+    },
+    {
+     a: 1,
+     b: 2,
+     c: [1, 2],
+     d: {
+       x: 10,
+       y: 20,
+       z: 30,
+     }
+    },
+    'objects'
+  );
+  t.deepEqual(
+    {
+     a: 1,
+     b: 2,
+     c: [1, 2],
+     d: {
+       x: 10,
+       y: 20,
+       z: 30,
+     }
+    },
+    {
+     a: 1,
+     b: 2,
+     c: [1, 2],
+     d: {
+       x: 10,
+       y: 20,
+       z: 31,
+     }
+    },
+    'unequal objects'
+  );
+  t.end();
+});
+/*
+TAP version 13
+# test
+ok 1 1 and 1
+ok 2 simple arrays
+ok 3 nested arrays
+ok 4 objects
+not ok 5 unequal objects
+  ---
+  operator: deepEqual
+  expected: { a: 1, b: 2, c: [ 1, 2 ], d: { x: 10, y: 20, z: 31 } }
+  actual:   { a: 1, b: 2, c: [ 1, 2 ], d: { x: 10, y: 20, z: 30 } }
+  at: <dirname>/data/case-28-deepEqual:32:5
+  ...
+not ok 6 test: test
+
+1..6
+# tests 6
+# pass  4
+# fail  2
+*/
