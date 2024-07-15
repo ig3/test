@@ -224,6 +224,10 @@ function end () {
     type: 'end',
     name: 'end',
   });
+  this.afterHooks
+  .forEach(hook => {
+    hook();
+  });
 }
 
 function equal (actual, expected, desc) {
@@ -260,6 +264,10 @@ function deepEqual (actual, expected, desc) {
   this.results.push(result);
 }
 
+function after (cb) {
+  this.afterHooks.push(cb);
+}
+
 function createTestContext (parent, desc) {
   return {
     level: (parent ? (parent.level + 1) : 0),
@@ -273,10 +281,13 @@ function createTestContext (parent, desc) {
     ok: ok,
     equal: equal,
     deepEqual: deepEqual,
+    after: after,
+    teardown: after,
     end: end,
     done: false,
     subtests: [],
     results: [],
+    afterHooks: [],
     promise: Promise.resolve(),
     nTest: 0,
     nPass: 0,

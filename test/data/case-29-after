@@ -1,0 +1,26 @@
+'use strict';
+
+const t = require('../..');
+
+let x = false;
+let y = false;
+t.test('test', t => {
+  t.after(() => { x = true; });
+  t.teardown(() => { y = true; });
+  t.end();
+});
+t.ok(x, 'x is set by t.after');
+t.ok(y, 'y is set by t.teardown');
+/*
+TAP version 13
+# test
+ok 1 test: test
+ok 2 x is set by t.after
+ok 3 y is set by t.teardown
+
+1..3
+# tests 3
+# pass  3
+
+# ok
+*/

@@ -318,6 +318,15 @@ expected: the expected value
 desc: a description of the test condition
 
 
+### after(cb) / teardown(cb)
+
+Register a hook function to be run after the test completes.
+
+cb: a function that will be called with no arguments after completion of
+the test.
+
+teardown is an alias for after.
+
 ### end()
 
 This method indicates the end of the test. It must be called exactly once
