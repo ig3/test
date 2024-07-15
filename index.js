@@ -1,26 +1,18 @@
 'use strict';
 
 const rootContext = createTestContext();
-let firstTest = true;
 
-function header () {
-  if (firstTest) {
-    console.log('TAP version 13');
-    firstTest = false;
-  }
-}
-
+// It aint over 'till it's over
 process.on('exit', code => {
-  rootContext.subtests
-  .forEach(subtest => {
-    if (!subtest.done) {
-      rootContext.nFail++;
-      console.log('not ok ' + (++rootContext.nTest) + ' test exited without ending: ' + subtest.desc);
-      console.log('  ---');
-      console.log('    operator: fail');
-      console.log('    at: ' + subtest.stack[0].slice(7));
-      console.log('  ...');
-    }
+  if (
+    rootContext.subtests.length > 0 ||
+    rootContext.results.length > 0
+  ) {
+    console.log('TAP version 13');
+  }
+  rootContext.results
+  .forEach(result => {
+    reportResult(rootContext, rootContext, result);
   });
   if (rootContext.nTest) {
     console.log();
@@ -39,80 +31,121 @@ process.on('exit', code => {
   }
 });
 
+function reportResult (rootContext, resultContext, result) {
+  if (result.type === 'test') {
+    console.log('# ' + result.desc);
+    result.context.results
+    .forEach(subResult => {
+      if (result.done) {
+        rootContext.nFail++;
+        result.context.nFail++;
+        console.log(
+          'not ok ' +
+          (++rootContext.nTest) +
+          ' ' + subResult.name + ' called after end'
+        );
+      } else {
+        if (subResult.type === 'end') {
+          result.done = true;
+        }
+        reportResult(rootContext, result.context, subResult);
+      }
+    });
+
+    if (!result.done) {
+      rootContext.nFail++;
+      result.context.nFail++;
+      console.log('not ok ' + (++rootContext.nTest) +
+        ' test exited without ending: ' + result.desc);
+      console.log('  ---');
+      console.log('    operator: fail');
+      console.log('    at: ' + result.context.stack[0].slice(7));
+      console.log('  ...');
+    }
+    if (result.context.nFail === 0) {
+      rootContext.nPass++;
+      console.log('ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
+    } else {
+      rootContext.nFail++;
+      console.log('not ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
+    }
+  } else if (result.type === 'skip') {
+    console.log('# ' + result.desc);
+    rootContext.nSkip++;
+    if (resultContext !== rootContext) resultContext.nSkip++;
+    console.log(
+      'ok ' +
+      (++rootContext.nTest) +
+      ' test: ' + result.desc + ' # SKIP'
+    );
+  } else if (result.type === 'assert') {
+    if (result.pass) {
+      rootContext.nPass++;
+      if (resultContext !== rootContext) resultContext.nPass++;
+    } else {
+      rootContext.nFail++;
+      if (resultContext !== rootContext) resultContext.nFail++;
+    }
+    console.log(
+      (result.pass ? 'ok ' : 'not ok ') +
+      (++rootContext.nTest) + ' ' +
+      result.desc
+    );
+  }
+}
+
 function test (desc, cb, opts) {
   const self = this;
-  header();
   const subContext = createTestContext(self, desc);
   subContext.stack = new Error('test').stack.split('\n').slice(2);
   self.subtests.push(subContext);
-  self.promise = (self.promise || Promise.resolve())
-  .then(() => {
-    console.log('# ' + desc);
-    return new Promise((resolve, reject) => {
-      subContext.resolve = resolve;
-      subContext.reject = reject;
-      return cb(subContext);
-    });
+  self.results.push({
+    type: 'test',
+    desc: desc,
+    context: subContext,
   });
+  cb(subContext);
 }
 
 function skip (desc, cb, opts) {
   const self = this;
-  header();
-  self.promise =
-    (self.promise || Promise.resolve())
-    .then(() => {
-      console.log('# ' + desc);
-      console.log('ok ' + (++rootContext.nTest) + ' test: ' + desc + ' # SKIP');
-      rootContext.nSkip++;
-      if (this !== rootContext) this.nSkip++;
-    });
+  const subContext = createTestContext(self, desc);
+  subContext.skip = true;
+  self.results.push({
+    type: 'skip',
+    desc: desc,
+    context: subContext,
+  });
 }
 
 function pass (desc) {
-  if (this.done) {
-    rootContext.nFail++;
-    if (this !== rootContext) this.nFail++;
-    console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
-  } else {
-    rootContext.nPass++;
-    if (this !== rootContext) this.nPass++;
-    console.log('ok ' + (++rootContext.nTest) + ' ' + desc);
-  }
+  this.results.push({
+    type: 'assert',
+    name: 'pass',
+    pass: true,
+    desc: desc,
+  });
 }
 
 function fail (desc) {
-  if (this.done) {
-    rootContext.nFail++;
-    if (this !== rootContext) this.nFail++;
-    console.log('not ok ' + (++rootContext.nTest) + ' .end already called: ' + desc);
-  } else {
-    rootContext.nFail++;
-    if (this !== rootContext) this.nFail++;
-    console.log('not ok ' + (++rootContext.nTest) + ' ' + desc);
-  }
+  this.results.push({
+    type: 'assert',
+    name: 'fail',
+    pass: false,
+    desc: desc,
+  });
 }
 
 function end () {
-  if (this.done) {
-    rootContext.nFail++;
-    if (this !== rootContext) this.nFail++;
-    console.log('not ok ' + (++rootContext.nTest) + ' .end already called');
-  } else {
-    this.done = true;
-    if (this.nFail === 0) {
-      rootContext.nPass++;
-      console.log('ok ' + (++rootContext.nTest) + ' test: ' + this.desc);
-    } else {
-      rootContext.nFail++;
-      console.log('not ok ' + (++rootContext.nTest) + ' test: ' + this.desc);
-    }
-    this.resolve();
-  }
+  this.results.push({
+    type: 'end',
+    name: 'end',
+  });
 }
 
 function createTestContext (parent, desc) {
   return {
+    level: (parent ? (parent.level + 1) : 0),
     parent: parent,
     desc: (desc || 'root'),
     test: test,
@@ -122,6 +155,7 @@ function createTestContext (parent, desc) {
     end: end,
     done: false,
     subtests: [],
+    results: [],
     nTest: 0,
     nPass: 0,
     nFail: 0,

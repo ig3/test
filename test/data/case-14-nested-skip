@@ -1,0 +1,24 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('outer test', t => {
+  t.skip('inner skip', t => {
+    t.end();
+  });
+  t.end();
+});
+/*
+TAP version 13
+# outer test
+# inner skip
+ok 1 test: inner skip # SKIP
+ok 2 test: outer test
+
+1..2
+# tests 2
+# pass  1
+# skip  1
+
+# ok
+*/

@@ -2,18 +2,18 @@
 
 const t = require('../..');
 
-t.test('pass after end', t => {
+t.test('call pass after end', t => {
   t.end();
   t.pass('pass after end');
 });
 /*
 TAP version 13
-# pass after end
-ok 1 test: pass after end
-not ok 2 .end already called: pass after end
+# call pass after end
+not ok 1 pass called after end
+not ok 2 test: call pass after end
 
 1..2
 # tests 2
-# pass  1
-# fail  1
+# pass  0
+# fail  2
 */

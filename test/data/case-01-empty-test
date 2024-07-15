@@ -12,9 +12,10 @@ not ok 1 test exited without ending: empty test
     operator: fail
     at: Object.<anonymous> (<dirname>/data/case-01-empty-test:5:3)
   ...
+not ok 2 test: empty test
 
-1..1
-# tests 1
+1..2
+# tests 2
 # pass  0
-# fail  1
+# fail  2
 */
