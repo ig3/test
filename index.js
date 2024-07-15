@@ -48,9 +48,6 @@ process.on('exit', code => {
 function reportResult (rootContext, resultContext, result) {
   if (result.type === 'test') {
     console.log('# ' + result.desc);
-    if (result.context.nPlan) {
-      console.log('1..' + result.context.nPlan);
-    }
     result.context.results
     .forEach(subResult => {
       if (result.done) {
