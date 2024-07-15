@@ -1,0 +1,23 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('plan', t => {
+  t.plan(1);
+  t.pass('a pass');
+  t.pass('another pass');
+  t.end();
+});
+/*
+TAP version 13
+# plan
+ok 1 a pass
+ok 2 another pass
+not ok 3 plan 1 != actual 2
+not ok 4 test: plan
+
+1..4
+# tests 4
+# pass  2
+# fail  2
+*/
