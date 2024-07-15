@@ -70,7 +70,8 @@ cb: the callback function that implements the test. This function will
 be called synchronously and will receive a single argument: a new test
 context with all the methods of the API. Its return value will be ignored,
 except that it will be passed to Promise.resolve() and the resulting
-promise will be the return value of the test method.
+promise will be the return value of the test method. It must call the end
+method exactly once.
 
 opts: ignored.
 
@@ -270,6 +271,7 @@ desc: a description of the condition.
 This assertion always passes. It is useful for recording in the TAP output
 that a block of code was executed as expected.
 
+
 ### fail(desc)
 
 An assertion that always fails.
@@ -280,13 +282,17 @@ This assertion always fails. It is useful in a block of code that should
 not be reached. For example, the catch of a try or promise, if failure is
 not expected.
 
-### end()
 
-This method indicates the end of the test. It must be called exactly once
-per test. If a test finishes and end() has not been called, an error will
-be produced and the test will be treated as a failing test. If end() is
-called more than once, an error is produced and the test will be treated as
-a failing test.
+### ok(actual, desc)
+
+An assertion that passes if actual is truthy.
+
+actual: the actual value to be tested.
+
+desc: a description of the condition.
+
+This assertion passes if actual is truthy and fails otherwise.
+
 
 ### equal(actual, expected, desc)
 
@@ -299,3 +305,11 @@ expected: the expected value
 
 desc: a description of the test condition
 
+
+### end()
+
+This method indicates the end of the test. It must be called exactly once
+per test. If a test finishes and end() has not been called, an error will
+be produced and the test will be treated as a failing test. If end() is
+called more than once, an error is produced and the test will be treated as
+a failing test.

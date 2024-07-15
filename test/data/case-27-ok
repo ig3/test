@@ -1,0 +1,60 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('test', t => {
+  t.ok(true, 'this should pass');
+  t.ok(false, 'this should fail');
+  t.ok(true);
+  t.ok(false);
+  t.ok('a string');
+  t.ok('');
+  t.ok(1);
+  t.ok(0);
+  t.ok();
+  t.end();
+});
+/*
+TAP version 13
+# test
+ok 1 this should pass
+not ok 2 this should fail
+  ---
+  operator: ok
+  actual:   false
+  at: <dirname>/data/case-27-ok:7:5
+  ...
+ok 3 ok
+not ok 4 ok
+  ---
+  operator: ok
+  actual:   false
+  at: <dirname>/data/case-27-ok:9:5
+  ...
+ok 5 ok
+not ok 6 ok
+  ---
+  operator: ok
+  actual:   
+  at: <dirname>/data/case-27-ok:11:5
+  ...
+ok 7 ok
+not ok 8 ok
+  ---
+  operator: ok
+  actual:   0
+  at: <dirname>/data/case-27-ok:13:5
+  ...
+not ok 9 ok
+  ---
+  operator: ok
+  actual:   undefined
+  at: <dirname>/data/case-27-ok:14:5
+  ...
+not ok 10 test: test
+
+1..10
+# tests 10
+# pass  4
+# fail  6
+*/

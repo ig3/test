@@ -206,6 +206,18 @@ function fail (desc) {
   });
 }
 
+function ok (actual, desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
+  this.results.push({
+    type: 'assert',
+    name: 'ok',
+    pass: !!actual,
+    actual: actual,
+    desc: desc,
+    stack: stack,
+  });
+}
+
 function end () {
   this.results.push({
     type: 'end',
@@ -236,8 +248,9 @@ function createTestContext (parent, desc) {
     plan: plan,
     pass: pass,
     fail: fail,
-    end: end,
+    ok: ok,
     equal: equal,
+    end: end,
     done: false,
     subtests: [],
     results: [],
