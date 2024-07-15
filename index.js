@@ -136,6 +136,18 @@ function reportResult (rootContext, resultContext, result) {
         (++rootContext.nTest) + ' ' +
         result.desc
       );
+      console.log('  ---');
+      console.log('  operator: ' + result.name);
+      if (typeof result.expected !== 'undefined') {
+        console.log('  expected: ' + result.expected);
+      }
+      if (typeof result.actual !== 'undefined') {
+        console.log('  actual:   ' + result.actual);
+      }
+      if (typeof result.stack !== 'undefined') {
+        console.log('  at: ' + result.stack[0].slice(7));
+      }
+      console.log('  ...');
       if (resultContext !== rootContext) {
         resultContext.nTest++;
         resultContext.nFail++;
@@ -173,20 +185,24 @@ function plan (n) {
 }
 
 function pass (desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'pass',
     pass: true,
     desc: desc,
+    stack: stack,
   });
 }
 
 function fail (desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'fail',
     pass: false,
     desc: desc,
+    stack: stack,
   });
 }
 
@@ -194,6 +210,19 @@ function end () {
   this.results.push({
     type: 'end',
     name: 'end',
+  });
+}
+
+function equal (actual, expected, desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
+  this.results.push({
+    type: 'assert',
+    name: 'equal',
+    pass: Object.is(actual, expected),
+    actual: actual,
+    expected: expected,
+    desc: desc,
+    stack: stack,
   });
 }
 
@@ -208,6 +237,7 @@ function createTestContext (parent, desc) {
     pass: pass,
     fail: fail,
     end: end,
+    equal: equal,
     done: false,
     subtests: [],
     results: [],

@@ -1,0 +1,28 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('test equal', t => {
+  const x = 1;
+  t.equal(x, 1, 'x is 1');
+  t.equal(x, 2, 'x is 2');
+  t.end();
+});
+/*
+TAP version 13
+# test equal
+ok 1 x is 1
+not ok 2 x is 2
+  ---
+  operator: equal
+  expected: 2
+  actual:   1
+  at: <dirname>/data/case-22-equal:8:5
+  ...
+not ok 3 test: test equal
+
+1..3
+# tests 3
+# pass  1
+# fail  2
+*/
