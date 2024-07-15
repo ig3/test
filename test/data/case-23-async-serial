@@ -1,0 +1,64 @@
+'use strict';
+
+const t = require('../..');
+
+const events = [];
+
+t.test('outer test', async t => {
+  events.push('outer test start');
+  await t.test('inner test one', t => {
+    events.push('inner test one start');
+    return new Promise(resolve => {
+      setTimeout(
+        () => {
+          resolve();
+          events.push('inner test one end');
+          t.end();
+        },
+        10
+      );
+    });
+  });
+  await t.test('inner test two', t => {
+    events.push('inner test two start');
+    return new Promise(resolve => {
+      setTimeout(
+        () => {
+          resolve();
+          events.push('inner test two end');
+          t.end();
+        },
+        10
+      );
+    });
+  });
+  events.push('outer test end');
+  t.equal(events[0], 'outer test start', 'outer test start');
+  t.equal(events[1], 'inner test one start', 'inner test one start');
+  t.equal(events[2], 'inner test one end', 'inner test one end');
+  t.equal(events[3], 'inner test two start', 'inner test two start');
+  t.equal(events[4], 'inner test two end', 'inner test two end');
+  t.equal(events[5], 'outer test end', 'outer test end');
+  t.end();
+});
+/*
+TAP version 13
+# outer test
+# inner test one
+ok 1 test: inner test one
+# inner test two
+ok 2 test: inner test two
+ok 3 outer test start
+ok 4 inner test one start
+ok 5 inner test one end
+ok 6 inner test two start
+ok 7 inner test two end
+ok 8 outer test end
+ok 9 test: outer test
+
+1..9
+# tests 9
+# pass  9
+
+# ok
+*/

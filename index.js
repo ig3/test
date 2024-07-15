@@ -138,10 +138,10 @@ function reportResult (rootContext, resultContext, result) {
       );
       console.log('  ---');
       console.log('  operator: ' + result.name);
-      if (typeof result.expected !== 'undefined') {
+      if (Object.hasOwn(result, 'expected')) {
         console.log('  expected: ' + result.expected);
       }
-      if (typeof result.actual !== 'undefined') {
+      if (Object.hasOwn(result, 'actual')) {
         console.log('  actual:   ' + result.actual);
       }
       if (typeof result.stack !== 'undefined') {
@@ -166,7 +166,7 @@ function test (desc, cb, opts) {
     desc: desc,
     context: subContext,
   });
-  cb(subContext);
+  return Promise.resolve(cb(subContext));
 }
 
 function skip (desc, cb, opts) {
@@ -241,6 +241,7 @@ function createTestContext (parent, desc) {
     done: false,
     subtests: [],
     results: [],
+    promise: Promise.resolve(),
     nTest: 0,
     nPass: 0,
     nFail: 0,

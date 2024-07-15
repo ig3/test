@@ -1,0 +1,64 @@
+'use strict';
+
+const t = require('../..');
+
+const events = [];
+
+t.test('outer test', t => {
+  events.push('outer test start');
+  t.test('inner test one', t => {
+    events.push('inner test one start');
+    return new Promise(resolve => {
+      setTimeout(
+        () => {
+          resolve();
+          events.push('inner test one end');
+          t.end();
+        },
+        11
+      );
+    });
+  });
+  t.test('inner test two', t => {
+    events.push('inner test two start');
+    return new Promise(resolve => {
+      setTimeout(
+        () => {
+          resolve();
+          events.push('inner test two end');
+          t.end();
+        },
+        10
+      );
+    });
+  });
+  events.push('outer test end');
+  t.equal(events[0], 'outer test start', 'events[0] == "outer test start"');
+  t.equal(events[1], 'inner test one start', 'events[1] == "inner test one start"');
+  t.equal(events[2], 'inner test two start', 'events[2] == "inner test two start"');
+  t.equal(events[3], 'outer test end', 'events[3] == "outer test end"');
+  t.equal(events[4], undefined, 'events[4] == undefined');
+  t.equal(events[5], undefined, 'events[5] == undefined');
+  t.end();
+});
+/*
+TAP version 13
+# outer test
+# inner test one
+ok 1 test: inner test one
+# inner test two
+ok 2 test: inner test two
+ok 3 events[0] == "outer test start"
+ok 4 events[1] == "inner test one start"
+ok 5 events[2] == "inner test two start"
+ok 6 events[3] == "outer test end"
+ok 7 events[4] == undefined
+ok 8 events[5] == undefined
+ok 9 test: outer test
+
+1..9
+# tests 9
+# pass  9
+
+# ok
+*/
