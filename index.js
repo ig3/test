@@ -68,7 +68,7 @@ function reportResult (rootContext, resultContext, result) {
 
     if (
       result.context.nPlan &&
-      result.context.results.length !== result.context.nPlan
+      result.context.nTest !== result.context.nPlan
     ) {
       rootContext.nFail++;
       result.context.nFail++;
@@ -76,7 +76,7 @@ function reportResult (rootContext, resultContext, result) {
         'not ok ' +
         (++rootContext.nTest) +
         ' plan ' + result.context.nPlan +
-        ' actual ' + result.context.nTest
+        ' != actual ' + result.context.nTest
       );
     }
 
