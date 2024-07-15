@@ -1,0 +1,35 @@
+'use strict';
+
+const t = require('../..');
+
+t.test('test', t => {
+  t.pass();
+  t.fail();
+  t.equal(1, 1);
+  t.equal(1, 2);
+  t.end();
+});
+/*
+TAP version 13
+# test
+ok 1 pass
+not ok 2 fail
+  ---
+  operator: fail
+  at: <dirname>/data/case-25-assert-no-desc:7:5
+  ...
+ok 3 equal
+not ok 4 equal
+  ---
+  operator: equal
+  expected: 2
+  actual:   1
+  at: <dirname>/data/case-25-assert-no-desc:9:5
+  ...
+not ok 5 test: test
+
+1..5
+# tests 5
+# pass  2
+# fail  3
+*/

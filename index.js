@@ -123,7 +123,7 @@ function reportResult (rootContext, resultContext, result) {
       console.log(
         'ok ' +
         (++rootContext.nTest) + ' ' +
-        result.desc
+        (result.desc || result.name)
       );
       if (resultContext !== rootContext) {
         resultContext.nTest++;
@@ -134,7 +134,7 @@ function reportResult (rootContext, resultContext, result) {
       console.log(
         'not ok ' +
         (++rootContext.nTest) + ' ' +
-        result.desc
+        (result.desc || result.name)
       );
       console.log('  ---');
       console.log('  operator: ' + result.name);
