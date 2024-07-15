@@ -67,10 +67,115 @@ Create a new test.
 desc: a string description of the test.
 
 cb: the callback function that implements the test. This function will
-receive a single argument: a new test context with all the methods of the
-API.
+be called synchronously and will receive a single argument: a new test
+context with all the methods of the API. Its return value will be ignored,
+except that it will be passed to Promise.resolve() and the resulting
+promise will be the return value of the test method.
 
 opts: ignored.
+
+Returns a promise which resolves to the return from the callback.
+Therefore, if the callback itself returns a promise, then the promise
+returned from the test method will not resolve until after the promise
+returned from the callback resolves. This feature can be used to run tests
+sequentially.
+
+For example:
+```
+'use strict';
+
+const t = require('@ig3/test');
+
+(async () => {
+  console.log('start');
+  await t.test('test one', t => {
+    console.log('start test one');
+    return new Promise(fulfill => {
+      setTimeout(
+        () => {
+          fulfill();
+          t.end();
+          console.log('end test one');
+        },
+        10
+      );
+    });
+    t.end();
+  });
+  await t.test('test two', t => {
+    console.log('start test two');
+    return new Promise(fulfill => {
+      setTimeout(
+        () => {
+          fulfill();
+          t.end();
+          console.log('end test two');
+        },
+        10
+      );
+    });
+    t.end();
+  });
+  console.log('end');
+})();
+```
+
+Produces the following output:
+
+```
+start
+start test one
+end test one
+start test two
+end test two
+end
+TAP version 13
+# test one
+ok 1 test: test one
+# test two
+ok 2 test: test two
+
+1..2
+# tests 2
+# pass  2
+
+# ok
+```
+
+The callback of test two is not called until after the promise returned
+from the callback of test one settles.
+
+Remove the awaits and the order of execution and output changes to:
+
+```
+start
+start test one
+start test two
+end
+end test one
+end test two
+TAP version 13
+# test one
+ok 1 test: test one
+# test two
+ok 2 test: test two
+
+1..2
+# tests 2
+# pass  2
+
+# ok
+```
+
+In this case, the callback of test two is called after the callback of test
+one is called (i.e. in the order of the calls to the test method) but
+before the promise returned by the callback of test one settles.
+
+In both cases, the TAP output is not produced until all tests are complete.
+
+@ig3/test methods are all synchronous. The only deferred proessing is
+production of the TAP output, which happens in a callback on the process
+exit event.
 
 ### skip(desc, cb, opts)
 
