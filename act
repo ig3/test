@@ -1,0 +1,39 @@
+    TAP version 13
+    # test: test
+    ok 1 this should pass
+    not ok 2 this should fail
+      ---
+      operator: ok
+      actual:   false
+      at: /home/ian/dev/@ig3/test/test/data/case-27-ok:7:5
+      ...
+    ok 3 ok
+    not ok 4 ok
+      ---
+      operator: ok
+      actual:   false
+      at: /home/ian/dev/@ig3/test/test/data/case-27-ok:9:5
+      ...
+    ok 5 ok
+    not ok 6 ok
+      ---
+      operator: ok
+      actual:   ''
+      at: /home/ian/dev/@ig3/test/test/data/case-27-ok:11:5
+      ...
+    ok 7 ok
+    not ok 8 ok
+      ---
+      operator: ok
+      actual:   0
+      at: /home/ian/dev/@ig3/test/test/data/case-27-ok:13:5
+      ...
+    not ok 9 ok
+      ---
+      operator: ok
+      actual:   undefined
+      at: /home/ian/dev/@ig3/test/test/data/case-27-ok:14:5
+      ...
+    not ok 10 test: test
+    
+

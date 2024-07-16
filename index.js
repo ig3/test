@@ -2,6 +2,7 @@
 
 const rootContext = createTestContext();
 const assert = require('node:assert/strict');
+const { inspect } = require('node:util');
 
 // It aint over 'till it's over
 process.on('exit', code => {
@@ -15,15 +16,11 @@ process.on('exit', code => {
       rootContext.nPlan &&
       rootContext.nPlan !== rootContext.nTest
     ) {
-      rootContext.nFail++;
-      process.exitCode = 1;
-      const actual = rootContext.nTest;
-      console.log(
-        'not ok ' +
-        (++rootContext.nTest) +
-        ' plan ' + rootContext.nPlan +
-        ' != actual ' + actual
+      logFail(
+        rootContext,
+        'plan ' + rootContext.nPlan + ' != actual ' + rootContext.nTest
       );
+      process.exitCode = 1;
     }
     if (rootContext.nTest) {
       console.log();
@@ -49,20 +46,15 @@ function reportResult (rootContext, resultContext, result) {
     result.context.results
     .forEach(subResult => {
       if (result.done) {
-        rootContext.nFail++;
-        result.context.nFail++;
-        console.log(
-          'not ok ' +
-          (++rootContext.nTest) +
-          ' ' + subResult.name + ' called after end'
+        logFail(
+          result.context,
+          subResult.name + ' called after end\n' +
+          '  ---\n' +
+          '  operation: ' + subResult.name + '\n' +
+          (subResult.desc ? '  desc: ' + subResult.desc + '\n' : '') +
+          '  at: ' + subResult.stack[0].slice(7) + '\n' +
+          '  ...'
         );
-        console.log('  ---');
-        console.log('  operation: ' + subResult.name);
-        if (subResult.desc) {
-          console.log('  desc: ' + subResult.desc);
-        }
-        console.log('  at: ' + subResult.stack[0].slice(7));
-        console.log('  ...');
       } else {
         if (subResult.type === 'end') {
           result.done = true;
@@ -75,40 +67,26 @@ function reportResult (rootContext, resultContext, result) {
       result.context.nPlan &&
       result.context.nTest !== result.context.nPlan
     ) {
-      rootContext.nFail++;
-      result.context.nFail++;
-      console.log(
-        'not ok ' +
-        (++rootContext.nTest) +
-        ' plan ' + result.context.nPlan +
-        ' != actual ' + result.context.nTest
+      logFail(
+        result.context,
+        'plan ' + result.context.nPlan + ' != actual ' + result.context.nTest
       );
     }
 
     if (!result.done) {
-      rootContext.nFail++;
-      result.context.nFail++;
-      console.log('not ok ' + (++rootContext.nTest) +
-        ' test exited without ending: ' + result.desc);
-      console.log('  ---');
-      console.log('    operator: fail');
-      console.log('    at: ' + result.context.stack[0].slice(7));
-      console.log('  ...');
+      logFail(
+        result.context,
+        'test exited without ending: ' + result.desc + '\n' +
+        '  ---\n' +
+        '    operator: fail\n' +
+        '    at: ' + result.context.stack[0].slice(7) + '\n' +
+        '  ...'
+      );
     }
     if (result.context.nFail === 0) {
-      rootContext.nPass++;
-      console.log('ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
-      if (resultContext !== rootContext) {
-        resultContext.nTest++;
-        resultContext.nPass++;
-      }
+      logPass(resultContext, 'test: ' + result.desc);
     } else {
-      rootContext.nFail++;
-      console.log('not ok ' + (++rootContext.nTest) + ' test: ' + result.desc);
-      if (resultContext !== rootContext) {
-        resultContext.nTest++;
-        resultContext.nFail++;
-      }
+      logFail(resultContext, 'test: ' + result.desc);
     }
   } else if (result.type === 'skip') {
     console.log('# test: ' + result.desc);
@@ -124,40 +102,43 @@ function reportResult (rootContext, resultContext, result) {
     }
   } else if (result.type === 'assert') {
     if (result.pass) {
-      rootContext.nPass++;
-      console.log(
-        'ok ' +
-        (++rootContext.nTest) + ' ' +
-        (result.desc || result.name)
-      );
-      if (resultContext !== rootContext) {
-        resultContext.nTest++;
-        resultContext.nPass++;
-      }
+      logPass(resultContext, (result.desc || result.name));
     } else {
-      rootContext.nFail++;
-      console.log(
-        'not ok ' +
-        (++rootContext.nTest) + ' ' +
-        (result.desc || result.name)
+      logFail(
+        resultContext,
+        (result.desc || result.name) + '\n' +
+        '  ---\n' +
+        '  operator: ' + result.name + '\n' +
+        ((Object.hasOwn(result, 'expected'))
+          ? '  expected: ' + inspect(result.expected) + '\n'
+          : ''
+        ) +
+        ((Object.hasOwn(result, 'actual'))
+          ? '  actual:   ' + inspect(result.actual) + '\n'
+          : ''
+        ) +
+        '  at: ' + result.stack[0].slice(7) + '\n' +
+        '  ...'
       );
-      console.log('  ---');
-      console.log('  operator: ' + result.name);
-      if (Object.hasOwn(result, 'expected')) {
-        console.log('  expected:', result.expected);
-      }
-      if (Object.hasOwn(result, 'actual')) {
-        console.log('  actual:  ', result.actual);
-      }
-      if (typeof result.stack !== 'undefined') {
-        console.log('  at: ' + result.stack[0].slice(7));
-      }
-      console.log('  ...');
-      if (resultContext !== rootContext) {
-        resultContext.nTest++;
-        resultContext.nFail++;
-      }
     }
+  }
+}
+
+function logPass (resultContext, msg) {
+  rootContext.nPass++;
+  console.log('ok ' + (++rootContext.nTest) + ' ' + msg);
+  if (resultContext !== rootContext) {
+    resultContext.nTest++;
+    resultContext.nPass++;
+  }
+}
+
+function logFail (resultContext, msg) {
+  rootContext.nFail++;
+  console.log('not ok ' + (++rootContext.nTest) + ' ' + msg);
+  if (resultContext !== rootContext) {
+    resultContext.nTest++;
+    resultContext.nFail++;
   }
 }
 

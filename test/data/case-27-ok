@@ -35,7 +35,7 @@ ok 5 ok
 not ok 6 ok
   ---
   operator: ok
-  actual:   
+  actual:   ''
   at: <dirname>/data/case-27-ok:11:5
   ...
 ok 7 ok

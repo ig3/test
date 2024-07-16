@@ -30,7 +30,7 @@ TAP version 13
 not ok 1 throws
   ---
   operator: throws
-  actual:   Missing expected exception
+  actual:   'Missing expected exception'
   at: <dirname>/data/case-30-throws:6:5
   ...
 ok 2 throws
@@ -38,14 +38,14 @@ not ok 3 throws
   ---
   operator: throws
   expected: /xxx/
-  actual:   test at <dirname>/data/case-30-throws:16:13
+  actual:   'test at <dirname>/data/case-30-throws:16:13'
   at: <dirname>/data/case-30-throws:14:5
   ...
 not ok 4 throws a test error
   ---
   operator: throws
   expected: /test/
-  actual:   Missing expected exception
+  actual:   'Missing expected exception'
   at: <dirname>/data/case-30-throws:20:5
   ...
 not ok 5 test: throws
