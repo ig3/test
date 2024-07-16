@@ -10,6 +10,10 @@ t.test('call fail after end', t => {
 TAP version 13
 # call fail after end
 not ok 1 fail called after end
+  ---
+  operation: fail
+  at: Object.<anonymous> (<dirname>/data/case-06-fail-after-end:5:3)
+  ...
 not ok 2 test: call fail after end
 
 1..2

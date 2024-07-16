@@ -10,6 +10,10 @@ t.test('end called twice', t => {
 TAP version 13
 # end called twice
 not ok 1 end called after end
+  ---
+  operation: end
+  at: Object.<anonymous> (<dirname>/data/case-05-end-called-twice:5:3)
+  ...
 not ok 2 test: end called twice
 
 1..2

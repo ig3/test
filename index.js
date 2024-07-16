@@ -59,6 +59,10 @@ function reportResult (rootContext, resultContext, result) {
           (++rootContext.nTest) +
           ' ' + subResult.name + ' called after end'
         );
+        console.log('  ---');
+        console.log('  operation: ' + subResult.name);
+        console.log('  at: ' + result.context.stack[0].slice(7));
+        console.log('  ...');
       } else {
         if (subResult.type === 'end') {
           result.done = true;
