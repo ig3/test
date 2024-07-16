@@ -12,7 +12,8 @@ TAP version 13
 not ok 1 fail called after end
   ---
   operation: fail
-  at: Object.<anonymous> (<dirname>/data/case-06-fail-after-end:5:3)
+  desc: fail after end
+  at: <dirname>/data/case-06-fail-after-end:7:5
   ...
 not ok 2 test: call fail after end
 

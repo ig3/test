@@ -12,7 +12,7 @@ TAP version 13
 not ok 1 end called after end
   ---
   operation: end
-  at: Object.<anonymous> (<dirname>/data/case-05-end-called-twice:5:3)
+  at: <dirname>/data/case-05-end-called-twice:7:5
   ...
 not ok 2 test: end called twice
 

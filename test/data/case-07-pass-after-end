@@ -12,7 +12,8 @@ TAP version 13
 not ok 1 pass called after end
   ---
   operation: pass
-  at: Object.<anonymous> (<dirname>/data/case-07-pass-after-end:5:3)
+  desc: pass after end
+  at: <dirname>/data/case-07-pass-after-end:7:5
   ...
 not ok 2 test: call pass after end
 

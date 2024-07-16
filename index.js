@@ -61,7 +61,10 @@ function reportResult (rootContext, resultContext, result) {
         );
         console.log('  ---');
         console.log('  operation: ' + subResult.name);
-        console.log('  at: ' + result.context.stack[0].slice(7));
+        if (subResult.desc) {
+          console.log('  desc: ' + subResult.desc);
+        }
+        console.log('  at: ' + subResult.stack[0].slice(7));
         console.log('  ...');
       } else {
         if (subResult.type === 'end') {
@@ -248,9 +251,11 @@ function throws (fn, expected, desc) {
 }
 
 function end () {
+  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'end',
     name: 'end',
+    stack: stack,
   });
   this.afterHooks
   .forEach(hook => {
