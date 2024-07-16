@@ -318,6 +318,17 @@ expected: the expected value
 desc: a description of the test condition
 
 
+### throws(cb[, expected[, desc]])
+
+Assertion passes if the function cf, called with no arguments, throws an exception and expected is not provided or expected matches the thrown exception.
+
+cb: a callback function that will be called with no arguments. 
+
+expected: a string, regular expression or object to be matched against the thrown exception.
+
+descr: a description of the test condition.
+
+
 ### after(cb) / teardown(cb)
 
 Register a hook function to be run after the test completes.

@@ -219,6 +219,30 @@ function ok (actual, desc) {
   });
 }
 
+function throws (fn, expected, desc) {
+  const stack = new Error('test').stack.split('\n').slice(2);
+  const result = {
+    type: 'assert',
+    name: 'throws',
+    pass: true,
+    desc: desc,
+    stack: stack,
+  };
+  try {
+    assert.throws(fn, expected, desc);
+  } catch (err) {
+    if (expected) result.expected = expected;
+    if (err.actual) {
+      result.actual = err.actual.message +
+        err.actual.stack.split('\n')[1].slice(3);
+    } else {
+      result.actual = 'Missing expected exception';
+    }
+    result.pass = false;
+  }
+  this.results.push(result);
+}
+
 function end () {
   this.results.push({
     type: 'end',
@@ -281,6 +305,7 @@ function createTestContext (parent, desc) {
     ok: ok,
     equal: equal,
     deepEqual: deepEqual,
+    throws: throws,
     after: after,
     teardown: after,
     end: end,
