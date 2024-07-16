@@ -5,10 +5,7 @@ const assert = require('node:assert/strict');
 
 // It aint over 'till it's over
 process.on('exit', code => {
-  if (
-    rootContext.subtests.length > 0 ||
-    rootContext.results.length > 0
-  ) {
+  if (rootContext.results.length > 0) {
     console.log('TAP version 13');
     rootContext.results
     .forEach(result => {
@@ -168,7 +165,6 @@ function test (desc, cb, opts) {
   const self = this;
   const subContext = createTestContext(self, desc);
   subContext.stack = new Error('test').stack.split('\n').slice(2);
-  self.subtests.push(subContext);
   self.results.push({
     type: 'test',
     desc: desc,
@@ -319,7 +315,6 @@ function createTestContext (parent, desc) {
     teardown: after,
     end: end,
     done: false,
-    subtests: [],
     results: [],
     afterHooks: [],
     promise: Promise.resolve(),
