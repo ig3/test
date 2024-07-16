@@ -14,7 +14,7 @@ t.test('async test', t => {
 });
 /*
 TAP version 13
-# async test
+# test: async test
 ok 1 immediate assertion
 ok 2 deferred assertion
 ok 3 test: async test

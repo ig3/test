@@ -11,8 +11,8 @@ t.test('outer test', t => {
 });
 /*
 TAP version 13
-# outer test
-# inner test
+# test: outer test
+# test: inner test
 ok 1 a pass in the inner test
 ok 2 test: inner test
 ok 3 test: outer test

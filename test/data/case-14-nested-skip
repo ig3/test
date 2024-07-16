@@ -10,8 +10,8 @@ t.test('outer test', t => {
 });
 /*
 TAP version 13
-# outer test
-# inner skip
+# test: outer test
+# test: inner skip
 ok 1 test: inner skip # SKIP
 ok 2 test: outer test
 

@@ -26,7 +26,7 @@ t.test('throws', t => {
 });
 /*
 TAP version 13
-# throws
+# test: throws
 not ok 1 throws
   ---
   operator: throws

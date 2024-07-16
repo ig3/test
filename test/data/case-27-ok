@@ -16,7 +16,7 @@ t.test('test', t => {
 });
 /*
 TAP version 13
-# test
+# test: test
 ok 1 this should pass
 not ok 2 this should fail
   ---

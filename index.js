@@ -45,7 +45,7 @@ process.on('exit', code => {
 
 function reportResult (rootContext, resultContext, result) {
   if (result.type === 'test') {
-    console.log('# ' + result.desc);
+    console.log('# test: ' + result.desc);
     result.context.results
     .forEach(subResult => {
       if (result.done) {
@@ -111,7 +111,7 @@ function reportResult (rootContext, resultContext, result) {
       }
     }
   } else if (result.type === 'skip') {
-    console.log('# ' + result.desc);
+    console.log('# test: ' + result.desc);
     rootContext.nSkip++;
     console.log(
       'ok ' +

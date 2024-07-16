@@ -56,7 +56,7 @@ t.test('test', t => {
 });
 /*
 TAP version 13
-# test
+# test: test
 ok 1 1 and 1
 ok 2 simple arrays
 ok 3 nested arrays

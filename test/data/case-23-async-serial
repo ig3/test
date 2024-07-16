@@ -43,10 +43,10 @@ t.test('outer test', async t => {
 });
 /*
 TAP version 13
-# outer test
-# inner test one
+# test: outer test
+# test: inner test one
 ok 1 test: inner test one
-# inner test two
+# test: inner test two
 ok 2 test: inner test two
 ok 3 outer test start
 ok 4 inner test one start

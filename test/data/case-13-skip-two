@@ -12,9 +12,9 @@ t.skip('skip two', t => {
 });
 /*
 TAP version 13
-# skip one
+# test: skip one
 ok 1 test: skip one # SKIP
-# skip two
+# test: skip two
 ok 2 test: skip two # SKIP
 
 1..2

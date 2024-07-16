@@ -8,7 +8,7 @@ t.test('end called twice', t => {
 });
 /*
 TAP version 13
-# end called twice
+# test: end called twice
 not ok 1 end called after end
   ---
   operation: end

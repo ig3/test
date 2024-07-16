@@ -11,8 +11,8 @@ t.test('outer', t => {
 });
 /*
 TAP version 13
-# outer
-# inner
+# test: outer
+# test: inner
 not ok 1 inner failure
   ---
   operator: fail

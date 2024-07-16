@@ -13,7 +13,7 @@ t.ok(x, 'x is set by t.after');
 t.ok(y, 'y is set by t.teardown');
 /*
 TAP version 13
-# test
+# test: test
 ok 1 test: test
 ok 2 x is set by t.after
 ok 3 y is set by t.teardown

@@ -7,7 +7,7 @@ t.test('basic test', t => {
 });
 /*
 TAP version 13
-# basic test
+# test: basic test
 ok 1 test: basic test
 
 1..1

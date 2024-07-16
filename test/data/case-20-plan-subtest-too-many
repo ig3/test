@@ -10,7 +10,7 @@ t.test('plan', t => {
 });
 /*
 TAP version 13
-# plan
+# test: plan
 ok 1 a pass
 ok 2 another pass
 not ok 3 plan 3 != actual 2
