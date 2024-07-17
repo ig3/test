@@ -296,7 +296,6 @@ function createTestContext (parent, desc) {
     done: false,
     results: [],
     afterHooks: [],
-    promise: Promise.resolve(),
     nTest: 0,
     nPass: 0,
     nFail: 0,
