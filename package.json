@@ -1,14 +1,21 @@
 {
   "name": "@ig3/test",
-  "version": "0.0.8",
+  "version": "0.0.9",
+  "description": "Minimal test framework",
+  "author": "Ian Goodacre",
+  "keywords": [
+    "tap",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ig3/test.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "eslint . && c8 node test/cases.js"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@ig3/eslint-config-entrain": "^4.0.2",
     "c8": "^10.1.2"

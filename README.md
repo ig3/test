@@ -1,6 +1,6 @@
 # @ig3/test
 
-A very minimal and simple TAP producing test module.
+A minimal TAP producing module for performing tests.
 
 ## Installation
 
@@ -345,3 +345,54 @@ per test. If a test finishes and end() has not been called, an error will
 be produced and the test will be treated as a failing test. If end() is
 called more than once, an error is produced and the test will be treated as
 a failing test.
+
+## Motivation
+
+I used [tape](https://www.npmjs.com/package/tape) and
+[multi-tape](https://www.npmjs.com/package/multi-tape) for many years to
+good effect but recently at installation npm was reporting deprecated and
+unsupported dependencies. This prompted me to review my test tools again.
+
+I tried [node's test runner](https://nodejs.org/api/test.html) and
+[assert](https://nodejs.org/api/assert.html). It was very appealing thta
+they were bundled with node which, among other things, gave me confidence
+that they would be well designed, well implemented and well supported. They
+are very competent tools but after using them I decided that I don't like
+assertions that throw exception and produce no output when they pass. It
+makes it difficult to distinguished assertions that passed from assertions
+that were never evaluated due to errors in or misunderstanding of the test
+scripts.
+
+I missed faults and relased code more than once, with all tests passing,
+only to find later that the tests weren't testing what I thought they were.
+I missed the verboseness of tape, with which every assertion is itself a
+test reported in the TAP output, making it easy to determine which and how
+many assertions were evaluated.
+
+So I returned to reviewing available packages and came across 
+[zora](https://www.npmjs.com/package/zora) which appealed due to
+its small size, lack of dependencies and similarity to tape. I tried it and
+it works well. Like tape, its assertions don't throw exceptions and each
+assertion that is evaluated is reported in the TAP output. The
+documentation is a bit scant so I spent some time reviewing the code to
+understand how it works and what it does and doesn't do. It was easy to
+rewrite existing tests to work with zora.
+
+I might have just used zora but by this time I had spent quite some time
+reviewing various frameworks and how they operated. I was curious about the
+possibility of a framework that worked like tape and zora, but allowed
+commonly avaailable assertion libraries to be used, like chai or
+node:assert: wrapping them to catch their exceptions and carry on testing,
+and reporting them all, pass or fail. And I missed the 'pass' assertion of
+tape and a few other very minor details that I hadn't gotten used to with
+zora.
+
+So I wrote this, as much an exercise in understanding how a test framework
+might work as an attempt to write the next best thing. It is not yet very
+developed, with only a handful of assertions. It wraps a couple of
+node:assert assertions but nothing in the API supports doing this with
+exception throwing assertions generally. And maybe it never will: I have a
+better appreciation for the diversity of assertions and failure reports.
+Reporting pass/fail would be trivial but more helpful diagnostics are not
+so easy to generalize.
+
