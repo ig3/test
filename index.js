@@ -278,10 +278,18 @@ function after (cb) {
 
 function createTestContext (level = 0) {
   return {
+    // Properties
     level: level,
+    results: [],
+    nTest: 0,
+    nPass: 0,
+    nFail: 0,
+    nSkip: 0,
+    afterHooks: [],
+    // Methods
+    plan: plan,
     test: test,
     skip: skip,
-    plan: plan,
     pass: pass,
     fail: fail,
     ok: ok,
@@ -291,12 +299,6 @@ function createTestContext (level = 0) {
     after: after,
     teardown: after,
     end: end,
-    results: [],
-    afterHooks: [],
-    nTest: 0,
-    nPass: 0,
-    nFail: 0,
-    nSkip: 0,
   };
 }
 
