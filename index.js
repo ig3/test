@@ -293,7 +293,6 @@ function createTestContext (parent, desc) {
     after: after,
     teardown: after,
     end: end,
-    done: false,
     results: [],
     afterHooks: [],
     nTest: 0,
