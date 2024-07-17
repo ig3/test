@@ -354,11 +354,11 @@ good effect but recently at installation npm was reporting deprecated and
 unsupported dependencies. This prompted me to review my test tools again.
 
 I tried [node's test runner](https://nodejs.org/api/test.html) and
-[assert](https://nodejs.org/api/assert.html). It was very appealing thta
-they were bundled with node which, among other things, gave me confidence
+[assert](https://nodejs.org/api/assert.html). It was very appealing that
+they are bundled with node which, among other things, gave me confidence
 that they would be well designed, well implemented and well supported. They
 are very competent tools but after using them I decided that I don't like
-assertions that throw exception and produce no output when they pass. It
+assertions that throw exceptions and produce no output when they pass. It
 makes it difficult to distinguished assertions that passed from assertions
 that were never evaluated due to errors in or misunderstanding of the test
 scripts.
