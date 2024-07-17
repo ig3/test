@@ -161,12 +161,9 @@ function test (desc, cb, opts) {
 
 function skip (desc, cb, opts) {
   const self = this;
-  const subContext = createTestContext(self.level + 1);
-  subContext.skip = true;
   self.results.push({
     type: 'skip',
     desc: desc,
-    context: subContext,
   });
 }
 
