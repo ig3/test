@@ -149,7 +149,7 @@ function getAt () {
 
 function test (desc, cb, opts) {
   const self = this;
-  const subContext = createTestContext(self);
+  const subContext = createTestContext(self.level + 1);
   subContext.at = getAt();
   self.results.push({
     type: 'test',
@@ -161,7 +161,7 @@ function test (desc, cb, opts) {
 
 function skip (desc, cb, opts) {
   const self = this;
-  const subContext = createTestContext(self);
+  const subContext = createTestContext(self.level + 1);
   subContext.skip = true;
   self.results.push({
     type: 'skip',
@@ -276,10 +276,9 @@ function after (cb) {
   this.afterHooks.push(cb);
 }
 
-function createTestContext (parent) {
+function createTestContext (level = 0) {
   return {
-    level: (parent ? (parent.level + 1) : 0),
-    parent: parent,
+    level: level,
     test: test,
     skip: skip,
     plan: plan,
