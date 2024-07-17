@@ -52,7 +52,7 @@ function reportResult (rootContext, resultContext, result) {
           '  ---\n' +
           '  operation: ' + subResult.name + '\n' +
           (subResult.desc ? '  desc: ' + subResult.desc + '\n' : '') +
-          '  at: ' + subResult.stack[0].slice(7) + '\n' +
+          '  at: ' + subResult.at + '\n' +
           '  ...'
         );
       } else {
@@ -79,7 +79,7 @@ function reportResult (rootContext, resultContext, result) {
         'test exited without ending: ' + result.desc + '\n' +
         '  ---\n' +
         '    operator: fail\n' +
-        '    at: ' + result.context.stack[0].slice(7) + '\n' +
+        '    at: ' + result.context.at + '\n' +
         '  ...'
       );
     }
@@ -117,7 +117,7 @@ function reportResult (rootContext, resultContext, result) {
           ? '  actual:   ' + inspect(result.actual) + '\n'
           : ''
         ) +
-        '  at: ' + result.stack[0].slice(7) + '\n' +
+        '  at: ' + result.at + '\n' +
         '  ...'
       );
     }
@@ -142,10 +142,15 @@ function logFail (resultContext, msg) {
   }
 }
 
+// Return the caller source location from the stack
+function getAt () {
+  return new Error('test').stack.split('\n')[3].slice(7);
+}
+
 function test (desc, cb, opts) {
   const self = this;
   const subContext = createTestContext(self, desc);
-  subContext.stack = new Error('test').stack.split('\n').slice(2);
+  subContext.at = getAt();
   self.results.push({
     type: 'test',
     desc: desc,
@@ -170,47 +175,43 @@ function plan (n) {
 }
 
 function pass (desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'pass',
     pass: true,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   });
 }
 
 function fail (desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'fail',
     pass: false,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   });
 }
 
 function ok (actual, desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'ok',
     pass: !!actual,
     actual: actual,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   });
 }
 
 function throws (fn, expected, desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   const result = {
     type: 'assert',
     name: 'throws',
     pass: true,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   };
   try {
     assert.throws(fn, expected, desc);
@@ -228,11 +229,10 @@ function throws (fn, expected, desc) {
 }
 
 function end () {
-  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'end',
     name: 'end',
-    stack: stack,
+    at: getAt(),
   });
   this.afterHooks
   .forEach(hook => {
@@ -241,7 +241,6 @@ function end () {
 }
 
 function equal (actual, expected, desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   this.results.push({
     type: 'assert',
     name: 'equal',
@@ -249,12 +248,11 @@ function equal (actual, expected, desc) {
     actual: actual,
     expected: expected,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   });
 }
 
 function deepEqual (actual, expected, desc) {
-  const stack = new Error('test').stack.split('\n').slice(2);
   const result = {
     type: 'assert',
     name: 'deepEqual',
@@ -262,7 +260,7 @@ function deepEqual (actual, expected, desc) {
     actual: actual,
     expected: expected,
     desc: desc,
-    stack: stack,
+    at: getAt(),
   };
   try {
     assert.deepEqual(actual, expected, desc);
