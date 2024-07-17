@@ -150,7 +150,6 @@ function getAt () {
 function test (desc, cb, opts) {
   const self = this;
   const subContext = createTestContext(self.level + 1);
-  subContext.at = getAt();
   self.results.push({
     type: 'test',
     desc: desc,
