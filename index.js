@@ -7,7 +7,7 @@ const { inspect } = require('node:util');
 // It aint over 'till it's over
 process.on('exit', code => {
   if (rootContext.results.length > 0) {
-    console.log('TAP version 13');
+    log('TAP version 13');
     rootContext.results
     .forEach(result => {
       reportResult(rootContext, rootContext, result);
@@ -23,26 +23,30 @@ process.on('exit', code => {
       process.exitCode = 1;
     }
     if (rootContext.nTest) {
-      console.log();
-      console.log('1..' + rootContext.nTest);
-      console.log('# tests ' + rootContext.nTest);
-      console.log('# pass  ' + rootContext.nPass);
+      log();
+      log('1..' + rootContext.nTest);
+      log('# tests ' + rootContext.nTest);
+      log('# pass  ' + rootContext.nPass);
       if (rootContext.nSkip) {
-        console.log('# skip  ' + rootContext.nSkip);
+        log('# skip  ' + rootContext.nSkip);
       }
       if (rootContext.nFail > 0) {
-        console.log('# fail  ' + rootContext.nFail);
+        log('# fail  ' + rootContext.nFail);
         process.exitCode = 1;
       } else if (rootContext.nPass > 0) {
-        console.log('\n# ok');
+        log('\n# ok');
       }
     }
   }
 });
 
+function log (...args) {
+  console.log(...args);
+}
+
 function reportResult (rootContext, resultContext, result) {
   if (result.type === 'test') {
-    console.log('# test: ' + result.desc);
+    log('# test: ' + result.desc);
     result.context.results
     .forEach(subResult => {
       if (result.done) {
@@ -89,9 +93,9 @@ function reportResult (rootContext, resultContext, result) {
       logFail(resultContext, 'test: ' + result.desc);
     }
   } else if (result.type === 'skip') {
-    console.log('# test: ' + result.desc);
+    log('# test: ' + result.desc);
     rootContext.nSkip++;
-    console.log(
+    log(
       'ok ' +
       (++rootContext.nTest) +
       ' test: ' + result.desc + ' # SKIP'
@@ -126,7 +130,7 @@ function reportResult (rootContext, resultContext, result) {
 
 function logPass (resultContext, msg) {
   rootContext.nPass++;
-  console.log('ok ' + (++rootContext.nTest) + ' ' + msg);
+  log('ok ' + (++rootContext.nTest) + ' ' + msg);
   if (resultContext !== rootContext) {
     resultContext.nTest++;
     resultContext.nPass++;
@@ -135,7 +139,7 @@ function logPass (resultContext, msg) {
 
 function logFail (resultContext, msg) {
   rootContext.nFail++;
-  console.log('not ok ' + (++rootContext.nTest) + ' ' + msg);
+  log('not ok ' + (++rootContext.nTest) + ' ' + msg);
   if (resultContext !== rootContext) {
     resultContext.nTest++;
     resultContext.nFail++;
