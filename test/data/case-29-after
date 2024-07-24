@@ -1,26 +1,58 @@
 'use strict';
 
-const t = require('../..');
+const t = require('../../index.js');
 
-let x = false;
-let y = false;
-t.test('test', t => {
-  t.after(() => { x = true; });
-  t.teardown(() => { y = true; });
+t.test('after', t => {
+  let called = [];
+  t.test('multiple after callbacks', t => {
+    t.after(() => { called.push('one'); });
+    t.after(() => { called.push('two'); });
+    t.end();
+  });
+  t.equal(called[0], 'two', 'second callback called first');
+  t.equal(called[1], 'one', 'first callback called second');
+
+  called = [];
+  t.test('multiple teardown callbacks', t => {
+    t.teardown(() => { called.push('one'); });
+    t.teardown(() => { called.push('two'); });
+    t.end();
+  });
+  t.equal(called[0], 'two', 'second callback called first');
+  t.equal(called[1], 'one', 'first callback called second');
+
+  called = [];
+  t.test('end called multiple times', t => {
+    t.after(() => { called.push('one'); });
+    t.end();
+    t.end();
+  });
+  t.equal(called.length, 1, 'callback is called once');
   t.end();
 });
-t.ok(x, 'x is set by t.after');
-t.ok(y, 'y is set by t.teardown');
 /*
 TAP version 13
-# test: test
-ok 1 test: test
-ok 2 x is set by t.after
-ok 3 y is set by t.teardown
+# test: after
+# test: multiple after callbacks
+ok 1 test: multiple after callbacks
+ok 2 second callback called first
+ok 3 first callback called second
+# test: multiple teardown callbacks
+ok 4 test: multiple teardown callbacks
+ok 5 second callback called first
+ok 6 first callback called second
+# test: end called multiple times
+not ok 7 end called after end
+  ---
+  operation: end
+  at: <dirname>/data/case-29-after:28:7
+  ...
+not ok 8 test: end called multiple times
+ok 9 callback is called once
+not ok 10 test: after
 
-1..3
-# tests 3
-# pass  3
-
-# ok
+1..10
+# tests 10
+# pass  7
+# fail  3
 */
