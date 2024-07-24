@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:ig3/test.git"
+    "url": "git+ssh://git@github.com/ig3/test.git"
   },
   "main": "index.js",
   "scripts": {
