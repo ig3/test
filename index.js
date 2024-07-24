@@ -83,7 +83,7 @@ function reportResult (rootContext, resultContext, result) {
         'test exited without ending: ' + result.desc + '\n' +
         '  ---\n' +
         '    operator: fail\n' +
-        '    at: ' + result.context.at + '\n' +
+        '    at: ' + result.at + '\n' +
         '  ...'
       );
     }
@@ -158,6 +158,7 @@ function test (desc, cb, opts) {
     type: 'test',
     desc: desc,
     context: subContext,
+    at: getAt(),
   });
   return Promise.resolve(cb(subContext));
 }
