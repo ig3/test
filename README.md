@@ -331,12 +331,14 @@ descr: a description of the test condition.
 
 ### after(cb) / teardown(cb)
 
-Register a hook function to be run after the test completes.
+Register a callback to be called when end() is called.
 
-cb: a function that will be called with no arguments after completion of
-the test.
+cb: a function that will be called with no arguments.
 
 teardown is an alias for after.
+
+If multiple callbacks are registered, they will be called in the reverse of
+the order they were registered (i.e. last in first out).
 
 ### end()
 

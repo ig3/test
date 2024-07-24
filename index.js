@@ -234,10 +234,9 @@ function end () {
     name: 'end',
     at: getAt(),
   });
-  this.afterHooks
-  .forEach(hook => {
-    hook();
-  });
+  while (this.afterHooks.length > 0) {
+    this.afterHooks.pop()();
+  }
 }
 
 function equal (actual, expected, desc) {

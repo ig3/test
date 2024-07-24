@@ -1,6 +1,6 @@
 {
   "name": "@ig3/test",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Minimal test framework",
   "author": "Ian Goodacre",
   "keywords": [
