@@ -7,9 +7,8 @@ t.test('empty test', t => {
 /*
 TAP version 13
 # test: empty test
-not ok 1 test exited without ending: empty test
+not ok 1 end() not called for test: empty test
   ---
-    operator: fail
     at: Object.<anonymous> (<dirname>/data/case-01-empty-test:5:3)
   ...
 not ok 2 test: empty test

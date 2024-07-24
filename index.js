@@ -80,9 +80,8 @@ function reportResult (rootContext, resultContext, result) {
     if (!result.done) {
       logFail(
         result.context,
-        'test exited without ending: ' + result.desc + '\n' +
+        'end() not called for test: ' + result.desc + '\n' +
         '  ---\n' +
-        '    operator: fail\n' +
         '    at: ' + result.at + '\n' +
         '  ...'
       );
