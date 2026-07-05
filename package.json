@@ -1,6 +1,6 @@
 {
   "name": "@ig3/test",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Minimal test framework",
   "author": "Ian Goodacre",
   "keywords": [
@@ -17,8 +17,8 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "@ig3/eslint-config-entrain": "^4.0.2",
-    "c8": "^10.1.2"
+    "@ig3/eslint-config-entrain": "^4.0.5",
+    "c8": "^11.0.0"
   },
   "files": [
     "README.md",
